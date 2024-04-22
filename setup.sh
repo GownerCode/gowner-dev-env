@@ -62,7 +62,7 @@ install_nvim_linux() {
     chmod u+x nvim.appimage
     ./nvim.appimage --appimage-extract
     # Move the extracted directory to a more permanent location
-    mv squashfs-root /opt/neovim-squashfs
+    sudo mv squashfs-root /opt/neovim-squashfs
     # Create a symbolic link to the Neovim binary
     sudo ln -s /opt/neovim-squashfs/usr/bin/nvim /usr/local/bin/nvim
     echo "Neovim installed successfully."
