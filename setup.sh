@@ -1,5 +1,28 @@
 #!/bin/bash
 
+# Ensure curl is installed for both Linux and macOS
+ensure_curl() {
+    if ! command -v curl &> /dev/null; then
+        echo "curl is not installed. Installing now..."
+        case "$1" in
+          'Linux')
+            sudo apt-get update
+            sudo apt-get install curl -y
+            ;;
+          'Darwin')
+            brew install curl
+            ;;
+          *)
+            echo "Unsupported operating system for curl installation."
+            exit 1
+            ;;
+        esac
+        echo "curl installed successfully."
+    else
+        echo "curl is already installed."
+    fi
+}
+
 # Function to install zsh on Debian-based Linux
 install_zsh_debian() {
     echo "Installing zsh on Debian-based Linux..."
@@ -33,10 +56,11 @@ install_tmux_macos() {
 }
 
 # Function to install Neovim on Debian-based Linux
-install_nvim_debian() {
-    echo "Installing Neovim on Debian-based Linux..."
-    sudo apt-get update
-    sudo apt-get install neovim -y
+install_nvim_linux() {
+    echo "Installing Neovim on Linux..."
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+    chmod u+x nvim.appimage
+    sudo mv nvim.appimage /usr/local/bin/nvim
 }
 
 # Function to install Neovim on macOS
@@ -45,10 +69,13 @@ install_nvim_macos() {
     brew install neovim
 }
 
+# Determine OS and ensure curl is installed
+OS="`uname`"
+ensure_curl $OS
+
 # Check for zsh and install if not present
 if ! command -v zsh &> /dev/null; then
     echo "zsh is not installed. Checking operating system..."
-    OS="`uname`"
     case $OS in
       'Linux')
         install_zsh_debian
@@ -105,7 +132,6 @@ fi
 # Check for tmux and install if not present
 if ! command -v tmux &> /dev/null; then
     echo "tmux is not installed. Checking operating system..."
-    OS="`uname`"
     case $OS in
       'Linux')
         install_tmux_debian
@@ -155,10 +181,9 @@ fi
 # Check for Neovim and install if not present
 if ! command -v nvim &> /dev/null; then
     echo "Neovim is not installed. Checking operating system..."
-    OS="`uname`"
     case $OS in
       'Linux')
-        install_nvim_debian
+        install_nvim_linux
         ;;
       'Darwin')
         install_nvim_macos
