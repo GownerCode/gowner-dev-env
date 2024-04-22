@@ -55,14 +55,22 @@ install_tmux_macos() {
     brew install tmux
 }
 
-# Function to install Neovim on Debian-based Linux
+# Function to install FUSE on Debian-based Linux
+install_fuse_debian() {
+    echo "Installing FUSE..."
+    sudo apt-get update
+    sudo apt-get install fuse libfuse2 -y
+    echo "FUSE installed successfully."
+}
+
+# Adjusted function to install Neovim on Debian-based Linux using AppImage
 install_nvim_linux() {
-    echo "Installing Neovim on Linux via PPA..."
-    sudo apt-get update
-    sudo apt-get install software-properties-common -y
-    sudo add-apt-repository ppa:neovim-ppa/stable -y
-    sudo apt-get update
-    sudo apt-get install neovim -y
+    echo "Installing Neovim on Linux..."
+    install_fuse_debian
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+    chmod u+x nvim.appimage
+    sudo mv nvim.appimage /usr/local/bin/nvim
+    echo "Neovim installed successfully."
 }
 
 # Function to install Neovim on macOS
