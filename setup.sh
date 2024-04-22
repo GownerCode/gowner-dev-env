@@ -57,10 +57,12 @@ install_tmux_macos() {
 
 # Function to install Neovim on Debian-based Linux
 install_nvim_linux() {
-    echo "Installing Neovim on Linux..."
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-    chmod u+x nvim.appimage
-    sudo mv nvim.appimage /usr/local/bin/nvim
+    echo "Installing Neovim on Linux via PPA..."
+    sudo apt-get update
+    sudo apt-get install software-properties-common -y
+    sudo add-apt-repository ppa:neovim-ppa/stable -y
+    sudo apt-get update
+    sudo apt-get install neovim -y
 }
 
 # Function to install Neovim on macOS
