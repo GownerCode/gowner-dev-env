@@ -55,21 +55,16 @@ install_tmux_macos() {
     brew install tmux
 }
 
-# Function to install FUSE on Debian-based Linux
-install_fuse_debian() {
-    echo "Installing FUSE..."
-    sudo apt-get update
-    sudo apt-get install fuse libfuse2 -y
-    echo "FUSE installed successfully."
-}
-
-# Adjusted function to install Neovim on Debian-based Linux using AppImage
+# Adjusted function to install Neovim on Debian-based Linux by extracting the AppImage
 install_nvim_linux() {
-    echo "Installing Neovim on Linux..."
-    install_fuse_debian
+    echo "Installing Neovim on Linux by extracting the AppImage..."
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
     chmod u+x nvim.appimage
-    sudo mv nvim.appimage /usr/local/bin/nvim
+    ./nvim.appimage --appimage-extract
+    # Move the extracted directory to a more permanent location
+    mv squashfs-root /opt/neovim-squashfs
+    # Create a symbolic link to the Neovim binary
+    sudo ln -s /opt/neovim-squashfs/usr/bin/nvim /usr/local/bin/nvim
     echo "Neovim installed successfully."
 }
 
